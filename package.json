@@ -1,0 +1,21 @@
+{
+  "name": "node-cli-app",
+  "version": "1.0.0",
+  "description": "This cli app will read JSON from a website and write it into a sql database.",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Matthew McGuff",
+  "license": "ISC",
+  "dependencies": {
+    "@prisma/client": "^5.6.0",
+    "axios": "^1.6.2",
+    "colors": "^1.4.0",
+    "fs": "^0.0.1-security",
+    "readline-sync": "^1.4.10"
+  },
+  "devDependencies": {
+    "prisma": "^5.6.0"
+  }
+}
