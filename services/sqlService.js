@@ -2,12 +2,20 @@ const { PrismaClient } = require('@prisma/client')
 const prisma = new PrismaClient()
 
 const sqlService = {
-  createCommonUser: async (user) => {
-    console.log(`...📥   create new common user:${JSON.stringify(user.email)}`);
-    await prisma.commonUser.create({
-      data: {
+  upsertCommonUser: async (user) => {
+    console.log(`...📥   upsert new common user:${JSON.stringify(user.email)}`);
+    await prisma.commonUser.upsert({
+      where: {
+        email: user.email
+      },
+      create: {
+        id: user.id,
         email: user.email,
         name: user.name
+      },
+      update: {
+        id: user.id,
+        name: user.name,
       }
     })
   },
@@ -17,7 +25,7 @@ const sqlService = {
     return commonUsers;
   },
   readCommonUser: async (id) => {
-    
+
   }
 }
 

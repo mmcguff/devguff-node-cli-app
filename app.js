@@ -6,32 +6,43 @@ const colors = require('colors'); // Optional: for colorful output
 const apiService = require('./services/apiService');
 const sqlService = require('./services/sqlService');
 
-
-
 async function main() {
-    console.log('Welcome to My CLI Application!'.cyan);
+  console.log('Welcome to My CLI User Management Interface!'.cyan);
     // Define valid options
-    const validOptions = ['users', 'option2', 'option3'];
+  const rootOptions = ['seed', 'create', 'read', 'update', 'delete', 'end'];
     let userInput;
     do {
-        userInput = readline.question('Enter a valid option (users, option2, option3): ');
-        if (!validOptions.includes(userInput)) {
+      userInput = readline.question('Enter a valid option (seed, create, read, update, delete, end): ');
+      if (!rootOptions.includes(userInput)) {
           console.log('Invalid option. Please try again.'.red);
         }
-    } while (!validOptions.includes(userInput));
-    if(userInput === 'users'){
+    } while (!rootOptions.includes(userInput));
+  if (userInput === 'seed') {
+    console.log('...Seed Users');
       const users = await apiService.getUsers();
       for(let i = 0; i < users.length; i++) {
         const user = users[i];
-        await sqlService.createCommonUser(user);
+        await sqlService.upsertCommonUser(user);
       }
       const commonUsers = await sqlService.readAllCommonUsers();
       console.log(commonUsers);
-      // using prisma write into a postgres database
-      // console.log(result);
-      // fs.writeFileSync('users.json', JSON.stringify(result));
-      // console.log('Data written to users.json'.green);
-    }
+  }
+  if(userInput === 'create'){
+    console.log('...Create user');
+  }
+  if(userInput === 'read'){
+    console.log('...Read user');
+  }
+  if(userInput === 'update'){
+    console.log('...Update user');
+  }
+  if(userInput === 'delete'){
+    console.log('...Delete user');
+  }
+  if(userInput === 'end'){
+    console.log('...Exit Program');
+    process.exit(0);
+  }
     // Example: Write user input to a file
 }
 
