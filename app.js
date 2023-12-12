@@ -9,10 +9,10 @@ const sqlService = require('./services/sqlService');
 async function main() {
   console.log('Welcome to My CLI User Management Interface!'.cyan);
     // Define valid options
-  const rootOptions = ['seed', 'create', 'read', 'update', 'delete', 'end'];
+  const rootOptions = ['seed', 'create', 'readAll', 'read', 'update', 'delete', 'end'];
     let userInput;
     do {
-      userInput = readline.question('Enter a valid option (seed, create, read, update, delete, end): ');
+      userInput = readline.question('Enter a valid option (seed, create, readAll, read, update, delete, end): ');
       if (!rootOptions.includes(userInput)) {
           console.log('Invalid option. Please try again.'.red);
         }
@@ -28,22 +28,45 @@ async function main() {
       console.log(commonUsers);
   }
   if(userInput === 'create'){
-    console.log('...Create user');
+    const userName = readline.question('Add user name:');
+    const userEmail = readline.questionEMail('Add user email:');
+    const userObject = {
+      name: userName,
+      email: userEmail
+    }
+    await sqlService.upsertCommonUser(userObject);
+  }
+  if(userInput === 'readAll'){
+    const users = await sqlService.readAllCommonUsers();
+    console.log(users);
   }
   if(userInput === 'read'){
-    console.log('...Read user');
+    const userId = readline.question('Enter user id:(1)', {defaultInput: '1'});
+    const user = await sqlService.readCommonUser(userId);
+    console.log(user);
   }
   if(userInput === 'update'){
-    console.log('...Update user');
+    const userId = readline.question('Enter user id:(1)', {defaultInput: '1'});
+    const currentUser = await sqlService.readCommonUser(userId);
+    console.log(currentUser);
+    const userName = readline.question(`Add user name:(${currentUser.name})`, {defaultInput: currentUser.name});
+    const userEmail = readline.questionEMail(`Add user email:(${currentUser.email})`, {defaultInput: currentUser.email});
+    const userObject = {
+      id: userId,
+      name: userName,
+      email: userEmail
+    }
+    await sqlService.updateCommonUser(userObject);
   }
   if(userInput === 'delete'){
-    console.log('...Delete user');
+    const userId = readline.question('Enter user id to delete:');
+    await sqlService.deleteCommonUser(userId);
   }
   if(userInput === 'end'){
     console.log('...Exit Program');
     process.exit(0);
   }
-    // Example: Write user input to a file
+  main();
 }
 
 (async () => {

@@ -1,4 +1,5 @@
-const { PrismaClient } = require('@prisma/client')
+const { PrismaClient } = require('@prisma/client');
+const commonService = require('./commonService');
 const prisma = new PrismaClient()
 
 const sqlService = {
@@ -9,23 +10,52 @@ const sqlService = {
         email: user.email
       },
       create: {
-        id: user.id,
+        id: parseInt(user.id),
         email: user.email,
         name: user.name
       },
       update: {
-        id: user.id,
+        id: parseInt(user.id),
         name: user.name,
+      }
+    })
+  },
+  updateCommonUser: async (user) => {
+    console.log(`...📥   update existing common user:${JSON.stringify(user)}`);
+    await prisma.commonUser.update({
+      where: {
+        id: parseInt(user.id),
+      },
+      data: {
+        email: user.email,
+        name: user.name
       }
     })
   },
   readAllCommonUsers: async () => {
     console.log(`...📤   read all common users`);
     const commonUsers = await prisma.commonUser.findMany();
-    return commonUsers;
+    const sortedCommonUsers = commonService.sortArrayByKey(commonUsers, 'id');
+    return sortedCommonUsers;
   },
   readCommonUser: async (id) => {
-
+    console.log(`...📥   read common user by id: ${id})`);
+    id = parseInt(id);
+    const commonUser = await prisma.commonUser.findUnique({
+      where: {
+        id: id,
+      }
+    })
+    return commonUser;
+  },
+  deleteCommonUser: async (id) => {
+    console.log(`...📥   delete common user by id: ${id})`);
+    id = parseInt(id);
+    await prisma.commonUser.delete({
+      where: {
+        id: id,
+      }
+    })
   }
 }
 
