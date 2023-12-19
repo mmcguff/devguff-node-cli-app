@@ -5,7 +5,7 @@ const prismaClient = new PrismaClient()
 const sqlService = {
   upsertCommonUser: async (user) => {
     console.log(`...📥   upsert new common user:${JSON.stringify(user.email)}`);
-    await prismaClient.commonUser.upsert({
+    const newUser = await prismaClient.commonUser.upsert({
       where: {
         email: user.email
       },
@@ -17,8 +17,11 @@ const sqlService = {
       update: {
         id: parseInt(user.id),
         name: user.name,
-      }
+      },
     })
+    newUser.email = user.email
+    newUser.name = user.name
+    return newUser;
   },
   updateCommonUser: async (user) => {
     console.log(`...📥   update existing common user:${JSON.stringify(user)}`);
