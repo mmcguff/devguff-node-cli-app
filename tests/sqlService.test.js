@@ -1,11 +1,5 @@
 const service = require('../services/sqlService');
 
-// describe("sqlService", () => {
-//   it("should work", () => {
-//     expect(1 + 1).toBe(2);
-//   });
-// });
-
 const { PrismaClient } = require('@prisma/client');
 const prismaMock = new PrismaClient();
 
@@ -15,15 +9,27 @@ jest.mock('@prisma/client', () => ({
       upsert: jest.fn((data) => {
         return { id: 1, name: data.name, email: data.email };
       }),
+      update: jest.fn((data) => {
+        return { id: data.id, name: data.name, email: data.email };
+      })
     },
   })),
 }));
 
-test('createUser should return a successful response', async () => {
-  const user = { name: 'John Doe', email: 'johndoe@example.com' };
-  const result = await service.upsertCommonUser(user);
+describe("sqlService", () => {
+  it('upsertCommonuser should create a new user if user doesn\'t previously exisit.', async () => {
+    const user = { name: 'John Doe', email: 'johndoe@example.com' };
+    const result = await service.upsertCommonUser(user);
     expect(result.id).toBeTruthy();
     expect(result.name).toBe(user.name);
     expect(result.email).toBe(user.email);
-
+  });
+  it('updateCommonUser should update to new values', async () => {
+    const user = { id: 42, name: 'Sample Sarah', email: 'sarahsample@example.com' };
+    const result = await service.updateCommonUser(user);
+    expect(result.id).toBe(user.id);
+    expect(result.name).toBe(user.name);
+    expect(result.email).toBe(user.email);
+  });
 });
+

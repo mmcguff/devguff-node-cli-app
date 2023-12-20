@@ -25,7 +25,7 @@ const sqlService = {
   },
   updateCommonUser: async (user) => {
     console.log(`...📥   update existing common user:${JSON.stringify(user)}`);
-    await prismaClient.commonUser.update({
+    const updatedUser = await prismaClient.commonUser.update({
       where: {
         id: parseInt(user.id),
       },
@@ -34,6 +34,10 @@ const sqlService = {
         name: user.name
       }
     })
+    updatedUser.id = user.id
+    updatedUser.email = user.email
+    updatedUser.name = user.name
+    return updatedUser;
   },
   readAllCommonUsers: async () => {
     console.log(`...📤   read all common users`);
