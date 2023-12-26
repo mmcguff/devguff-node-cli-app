@@ -4,7 +4,8 @@
   "description": "This cli app will read JSON from a website and write it into a sql database.",
   "main": "app.js",
   "scripts": {
-    "test": "jest"
+    "test": "jest",
+    "start": "node app.js"
   },
   "author": "Matthew McGuff",
   "license": "ISC",

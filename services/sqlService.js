@@ -10,17 +10,15 @@ const sqlService = {
         email: user.email
       },
       create: {
-        id: parseInt(user.id),
         email: user.email,
         name: user.name
       },
       update: {
-        id: parseInt(user.id),
         name: user.name,
       },
     })
-    newUser.email = user.email
     newUser.name = user.name
+    newUser.email = user.email
     return newUser;
   },
   updateCommonUser: async (user) => {
@@ -34,7 +32,7 @@ const sqlService = {
         name: user.name
       }
     })
-    updatedUser.id = user.id
+    // updatedUser.id = user.id
     updatedUser.email = user.email
     updatedUser.name = user.name
     return updatedUser;
